@@ -11,7 +11,7 @@ let player2Stats;
 let mapName;
 let timer = 4
 let maps = {
-    Anchor9: ["Repair Control","Repair Wing","Weapons Wing","Observation Deck","Control Room","External Platform","Space","Hangar","Sabre","Repair Ledge","Repair Operations","Access_Tunnel"],
+    Anchor_9: ["Repair Control","Repair Wing","Weapons Wing","Observation Deck","Control Room","External Platform","Space","Hangar","Sabre","Repair Ledge","Repair Operations","Access_Tunnel"],
     Arena_Zealot: ["Red Platform","Red Curved Hall","Red Corner","Red Halls","Blue Platform","Blue Curved Hall","Blue Corner","Blue Halls","Center Platform","High Center","Ground Floor","Basement","Holograms"],
     // Asylum: {},
     Boardwalk: ["Cafe Hall","Cafe Square","Upper Courtyard","Skybridge","Courtyard","Service Tunnels","Visitor Center","Ocean View","Courtyard Balcony","Rest Stop 1st Floor","Rest Stop 2nd Floor","Rest Stop Balcony","Overlook","Make Out Point","Abyss"],
@@ -79,14 +79,38 @@ function checkScore(){
 
 async function getresults() {
     let player1 = await mcc.games.history({
-    gamertag: player1Name // (required)
+    gamertag: player1Name,
+    game: 'Halo: Reach',
+    gameVariant: 'Slayer', // (required)
     });
     let player2 = await mcc.games.history({
-        gamertag: player2Name // (required)
+        gamertag: player2Name,
+        game: 'Halo: Reach',
+        gameVariant: 'Slayer', // (required)
         });
-        let player1Stats = player1.summary.killDeathRatio;
-        let player2Stats = player2.summary.killDeathRatio;
-    console.log(player1.results)
+        let player1KD = player1.summary.killDeathRatio*100;
+        player1.games.splice(9, player1.games.length-10)
+        console.log(player1.games);
+        let player1Last10 =[];
+        player1.games.map(function(d, f){
+                player1Last10.push(d.killDeathRatio)
+            
+        });
+        var player1RecentKD = player1Last10.reduce(function(a, b){
+            return a + b;
+            }, 0)*10;
+    
+            
+        
+        console.log(player1Last10); 
+        console.log(sum);
+        let player1Luck = Math.random()*100;
+        let player2KD = player2.summary.killDeathRatio*100;
+        let player2Luck = Math.random()*100;
+        // let player2Last10 = player1.games.splice(9);
+        let player1Stats = player1KD+player1Luck+player1RecentKD;
+        let player2Stats = player2KD+player2Luck
+    // console.log(player1.games)
     console.log(player1Stats)
     console.log(player2Stats)
 battle();
